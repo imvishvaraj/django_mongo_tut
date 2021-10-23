@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import configparser
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+config = configparser.ConfigParser()
+config.read('/Users/vishvaraj/projects/config.ini')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -73,10 +76,28 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'djmontest',
+        'ENFORCE_SCHEMA': True,
+        'LOGGING': {
+            'version': 1,
+            'loggers': {
+                'djongo': {
+                    'level': 'DEBUG',
+                    'propogate': False,
+                }
+            },
+         },
+        'CLIENT': {
+            'host': config['MONGODB']['HOST'],
+            'username': config['MONGODB']['USERNAME'],
+            'password': config['MONGODB']['PASSWORD'],
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 
